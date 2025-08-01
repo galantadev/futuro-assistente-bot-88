@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  cit_frontend:
+    build: .
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.citfrontend.rule=Host(`cit.galanta.com.br`)"
+      - "traefik.http.routers.citfrontend.entrypoints=websecure"
+      - "traefik.http.routers.citfrontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.citfrontend.loadbalancer.server.port=80"
+    networks:
+      - traefik_network
+
+networks:
+  traefik_network:
+    external: true
