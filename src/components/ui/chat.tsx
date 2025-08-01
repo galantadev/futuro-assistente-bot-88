@@ -67,10 +67,10 @@ export function Chat({ className }: ChatProps) {
       if (response.ok) {
         const data = await response.json();
         
-        // Use the response from N8n
+        // Use apenas a resposta do webhook N8n
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
-          content: data.response || data.message || "Desculpe, não consegui processar sua pergunta. Tente novamente.",
+          content: data.response,
           role: "assistant",
           timestamp: new Date(),
         };
