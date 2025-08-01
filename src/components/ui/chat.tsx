@@ -67,14 +67,15 @@ export function Chat({ className }: ChatProps) {
       if (response.ok) {
         const data = await response.json();
         
-        // Use apenas a resposta do webhook N8n
+        // Use a resposta do webhook N8n (campo "output")
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
-          content: data.response,
+          content: data.output,
           role: "assistant",
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, aiMessage]);
+        setIsLoading(false);
       } else {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
