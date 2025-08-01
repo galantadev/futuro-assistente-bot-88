@@ -101,54 +101,62 @@ export function Chat({ className }: ChatProps) {
   };
 
   return (
-    <Card className={cn("flex flex-col h-[600px] bg-card border-border shadow-card", className)}>
+    <Card className={cn("flex flex-col h-[600px] bg-card/80 backdrop-blur-sm border-border/50 shadow-elegant overflow-hidden", className)}>
       {/* Chat Header */}
-      <div className="flex items-center gap-3 p-4 border-b border-border bg-gradient-primary rounded-t-lg">
-        <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center animate-glow-pulse">
-          <Bot className="w-5 h-5 text-primary" />
+      <div className="flex items-center gap-3 p-6 border-b border-border/30 bg-gradient-primary/90 backdrop-blur-sm">
+        <div className="relative">
+          <div className="w-10 h-10 rounded-full bg-card/20 backdrop-blur-sm flex items-center justify-center border border-primary-foreground/20">
+            <Bot className="w-5 h-5 text-primary-foreground" />
+          </div>
+          {/* Online status indicator */}
+          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-primary-foreground/20"></div>
         </div>
-        <div>
-          <h3 className="font-semibold text-primary-foreground">CIT | Tarumã</h3>
-          <p className="text-sm text-primary-foreground/80">Centro de Inovação Tecnológica</p>
+        <div className="flex-1">
+          <h3 className="font-semibold text-primary-foreground text-lg">CIT | Tarumã</h3>
+          <p className="text-sm text-primary-foreground/70">Centro de Inovação Tecnológica • Online</p>
         </div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {messages.map((message) => (
           <div
             key={message.id}
             className={cn(
-              "flex gap-3 animate-fade-in",
+              "flex gap-4 animate-fade-in",
               message.role === "user" ? "justify-end" : "justify-start"
             )}
           >
             {message.role === "assistant" && (
-              <Avatar className="w-8 h-8 border border-primary/30">
-                <AvatarFallback className="bg-primary/10 text-primary">
-                  <Bot className="w-4 h-4" />
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar className="w-10 h-10 border-2 border-primary/20 shadow-sm">
+                  <AvatarFallback className="bg-gradient-primary text-primary-foreground">
+                    <Bot className="w-5 h-5" />
+                  </AvatarFallback>
+                </Avatar>
+                {/* Online status for assistant */}
+                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-card"></div>
+              </div>
             )}
             
             <div
               className={cn(
-                "max-w-[80%] sm:max-w-[70%] rounded-xl p-3 shadow-sm",
+                "max-w-[75%] sm:max-w-[65%] rounded-2xl p-4 shadow-sm backdrop-blur-sm transition-all duration-200 hover:shadow-md",
                 message.role === "user"
-                  ? "bg-primary text-primary-foreground ml-6 sm:ml-12"
-                  : "bg-muted text-muted-foreground mr-6 sm:mr-12"
+                  ? "bg-gradient-primary text-primary-foreground ml-8 sm:ml-14"
+                  : "bg-card/60 border border-border/40 text-foreground mr-8 sm:mr-14"
               )}
             >
-              <p className="text-sm leading-relaxed">{message.content}</p>
-              <span className="text-xs opacity-60 mt-1 block">
+              <p className="text-sm leading-relaxed mb-2">{message.content}</p>
+              <span className="text-xs opacity-60">
                 {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
 
             {message.role === "user" && (
-              <Avatar className="w-8 h-8 border border-accent/30">
+              <Avatar className="w-10 h-10 border-2 border-accent/20 shadow-sm">
                 <AvatarFallback className="bg-accent/10 text-accent">
-                  <User className="w-4 h-4" />
+                  <User className="w-5 h-5" />
                 </AvatarFallback>
               </Avatar>
             )}
@@ -156,17 +164,20 @@ export function Chat({ className }: ChatProps) {
         ))}
 
         {isLoading && (
-          <div className="flex gap-3 justify-start animate-fade-in">
-            <Avatar className="w-8 h-8 border border-primary/30">
-              <AvatarFallback className="bg-primary/10 text-primary">
-                <Bot className="w-4 h-4" />
-              </AvatarFallback>
-            </Avatar>
-            <div className="bg-muted text-muted-foreground rounded-xl p-3 mr-6 sm:mr-12">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          <div className="flex gap-4 justify-start animate-fade-in">
+            <div className="relative">
+              <Avatar className="w-10 h-10 border-2 border-primary/20 shadow-sm">
+                <AvatarFallback className="bg-gradient-primary text-primary-foreground">
+                  <Bot className="w-5 h-5" />
+                </AvatarFallback>
+              </Avatar>
+              <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-card"></div>
+            </div>
+            <div className="bg-card/60 border border-border/40 text-foreground rounded-2xl p-4 mr-8 sm:mr-14 backdrop-blur-sm">
+              <div className="flex space-x-1.5">
+                <div className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce"></div>
+                <div className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.15s' }}></div>
+                <div className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.3s' }}></div>
               </div>
             </div>
           </div>
@@ -177,21 +188,21 @@ export function Chat({ className }: ChatProps) {
       </div>
 
       {/* Input Area */}
-      <form onSubmit={handleSendMessage} className="p-4 border-t border-border">
-        <div className="flex gap-2">
+      <form onSubmit={handleSendMessage} className="p-6 border-t border-border/30 bg-card/30 backdrop-blur-sm">
+        <div className="flex gap-3">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Digite sua pergunta sobre nossos serviços..."
-            className="flex-1 bg-muted border-border focus:border-primary focus:ring-primary/20"
+            className="flex-1 bg-card/50 border-border/40 focus:border-primary focus:ring-primary/20 rounded-2xl px-4 py-3 backdrop-blur-sm transition-all duration-200"
             disabled={isLoading}
           />
           <Button 
             type="submit" 
             disabled={!input.trim() || isLoading}
-            className="bg-gradient-primary hover:shadow-primary-glow transition-all duration-300"
+            className="bg-gradient-primary hover:shadow-primary-glow transition-all duration-300 rounded-2xl px-4 py-3 min-w-[48px] h-auto"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-5 h-5" />
           </Button>
         </div>
       </form>
