@@ -66,17 +66,20 @@ export function Chat({ className }: ChatProps) {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("Resposta do webhook:", data); // Debug
         
         // Use a resposta do webhook N8n (campo "output")
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
-          content: data.output,
+          content: data.output || "Desculpe, não recebi uma resposta válida.",
           role: "assistant",
           timestamp: new Date(),
         };
+        
         setMessages((prev) => [...prev, aiMessage]);
         setIsLoading(false);
       } else {
+        console.error("Erro na resposta do webhook:", response.status);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
