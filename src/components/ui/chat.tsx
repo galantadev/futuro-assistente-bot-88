@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Card } from "./card";
@@ -20,6 +20,7 @@ interface ChatProps {
 
 export function Chat({ className }: ChatProps) {
   const { toast } = useToast();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -32,6 +33,11 @@ export function Chat({ className }: ChatProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const webhookUrl = "https://webhook.weeego.com.br/webhook/cit";
+
+  // Auto scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,10 +133,10 @@ export function Chat({ className }: ChatProps) {
             
             <div
               className={cn(
-                "max-w-[80%] rounded-xl p-3 shadow-sm",
+                "max-w-[80%] sm:max-w-[70%] rounded-xl p-3 shadow-sm",
                 message.role === "user"
-                  ? "bg-primary text-primary-foreground ml-12"
-                  : "bg-muted text-muted-foreground mr-12"
+                  ? "bg-primary text-primary-foreground ml-6 sm:ml-12"
+                  : "bg-muted text-muted-foreground mr-6 sm:mr-12"
               )}
             >
               <p className="text-sm leading-relaxed">{message.content}</p>
@@ -156,7 +162,7 @@ export function Chat({ className }: ChatProps) {
                 <Bot className="w-4 h-4" />
               </AvatarFallback>
             </Avatar>
-            <div className="bg-muted text-muted-foreground rounded-xl p-3 mr-12">
+            <div className="bg-muted text-muted-foreground rounded-xl p-3 mr-6 sm:mr-12">
               <div className="flex space-x-1">
                 <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
                 <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -165,6 +171,9 @@ export function Chat({ className }: ChatProps) {
             </div>
           </div>
         )}
+        
+        {/* Scroll anchor */}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
