@@ -11,8 +11,8 @@ services:
       - "traefik.http.routers.citfrontend.tls.certresolver=letsencrypt"
       - "traefik.http.services.citfrontend.loadbalancer.server.port=80"
     networks:
-      - traefik_network
+      - web
 
 networks:
-  traefik_network:
+  web:
     external: true
