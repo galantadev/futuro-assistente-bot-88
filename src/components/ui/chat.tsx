@@ -56,7 +56,6 @@ export function Chat({ className }: ChatProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        mode: "no-cors",
         body: JSON.stringify({
           message: currentInput,
           timestamp: new Date().toISOString(),
@@ -65,17 +64,20 @@ export function Chat({ className }: ChatProps) {
         }),
       });
 
-      // Simulate AI response (in a real implementation, you'd get this from N8n)
-      setTimeout(() => {
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Use the response from N8n
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
-          content: "Obrigado pela sua pergunta! Estou processando sua solicitação. No Centro de Inovação Tecnológica de Tarumã, oferecemos diversos serviços como desenvolvimento de software, consultoria em transformação digital, incubação de startups e treinamentos em tecnologia. Você poderia especificar sobre qual serviço gostaria de saber mais?",
+          content: data.response || data.message || "Desculpe, não consegui processar sua pergunta. Tente novamente.",
           role: "assistant",
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, aiMessage]);
-        setIsLoading(false);
-      }, 1500);
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
     } catch (error) {
       console.error("Error sending message to N8n:", error);
